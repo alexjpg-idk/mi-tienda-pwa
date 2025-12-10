@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-// 1. IMPORTAMOS FIRESTORE (La base de datos)
-import { getFirestore } from "firebase/firestore"; 
+// 1. IMPORTAMOS LAS FUNCIONES DE PERSISTENCIA
+import { getFirestore, enableIndexedDbPersistence } from "firebase/firestore"; 
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -17,6 +17,18 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// 2. INICIALIZAMOS Y EXPORTAMOS LA BASE DE DATOS
-// Esto es lo que usará tu HomePage.jsx para pedir los productos
+// Inicializar Firestore
 export const db = getFirestore(app);
+
+// 2. ACTIVAR LA PERSISTENCIA OFFLINE
+// Esto permite que la base de datos funcione sin internet
+enableIndexedDbPersistence(db)
+  .catch((err) => {
+      if (err.code == 'failed-precondition') {
+          // Falló porque probablemente tienes muchas pestañas abiertas a la vez
+          console.log("Persistencia falló: Múltiples pestañas abiertas");
+      } else if (err.code == 'unimplemented') {
+          // El navegador no soporta esta función (raro hoy en día)
+          console.log("El navegador no soporta persistencia offline");
+      }
+  });
