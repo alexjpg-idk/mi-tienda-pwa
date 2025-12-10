@@ -17,7 +17,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Inicializar Firestore
+// Inicializar Firestoregit
 export const db = getFirestore(app);
 
 // 2. ACTIVAR LA PERSISTENCIA OFFLINE
